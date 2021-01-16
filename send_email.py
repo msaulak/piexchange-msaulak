@@ -21,7 +21,7 @@ def run_email_manager():
     x = OutgoingEmailManager(email_template_path=args.email_template, customer_data_path=args.customers_data,
                              output_emails_directory=args.output_directory, errors_file_location=args.errors_file_path)
 
-    x.read_data()
+    x.send_emails()
 
 
 if __name__ == '__main__':

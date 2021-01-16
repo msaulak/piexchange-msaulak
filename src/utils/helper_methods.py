@@ -11,8 +11,6 @@ def log_and_call(func):
     fname = func.__name__
 
     def inner_func(*args, **kwargs):
-        print(fname, "(", end="")
-
         args = tuple(list(args)[1:])
 
         log_list = [fname + ': ' + ', '.join('% s = % r' % entry for entry in zip(argnames, args[:len(argnames)]))]
