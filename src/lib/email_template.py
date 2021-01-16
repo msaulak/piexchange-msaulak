@@ -2,7 +2,7 @@ import json
 import logging
 from typing import Dict, Optional
 
-from src.utils.helper_methods import log_and_call
+from src.utils.helper_methods import log_and_call, object_to_str
 
 logger = logging.getLogger('pi.exchange.emailsender')
 
@@ -26,11 +26,7 @@ class EmailTemplate:
             logger.info(f'EmailTemplate: {str(self)}')
 
     def __str__(self):
-        ret_str_list = []
-        for k,v in vars(self).items():
-            ret_str_list.append(f'{k} : {v}')
-
-        return ' | '.join(ret_str_list)
+        return object_to_str(self)
 
     def __repr__(self):
-        return str(self)
+        return object_to_str(self)

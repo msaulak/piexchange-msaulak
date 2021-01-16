@@ -5,7 +5,6 @@ logger = logging.getLogger('pi.exchange.emailsender')
 
 
 def log_and_call(func):
-
     argnames = tuple([a for a in func.__code__.co_varnames[:func.__code__.co_argcount] if a != 'self'])
 
     fname = func.__name__
@@ -20,3 +19,11 @@ def log_and_call(func):
         logger.info(' | '.join(log_list))
 
     return inner_func
+
+
+def object_to_str(o):
+    ret_str_list = []
+    for k, v in vars(o).items():
+        ret_str_list.append(f'{k} : {v}')
+
+    return ' | '.join(ret_str_list)

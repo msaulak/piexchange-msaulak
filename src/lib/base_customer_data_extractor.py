@@ -2,7 +2,9 @@ import logging
 import os
 
 import pandas as pd
-from typing import Optional
+from typing import Optional, List
+
+from src.lib.customer_data import CustomerData
 
 logger = logging.getLogger('pi.exchange.emailsender')
 
@@ -14,6 +16,8 @@ class BaseCustomerDataExtractor:
 
         self.customer_data: Optional[pd.DataFrame] = None
         self.erroneous_data: Optional[pd.DataFrame] = None
+
+        self.customer_data_list: List[CustomerData] = []
 
     def _load_customer_data(self):
         raise NotImplementedError('load_customer_data not implemented')
@@ -38,3 +42,8 @@ class BaseCustomerDataExtractor:
         logger.info(f'Customer dataframe\n{self.customer_data}')
         self._clean_dataset()
         logger.info(f'Cleaned customer data\n{self.customer_data}')
+
+        for customer_data_dict in self.customer_data.to_dict(orient='records'):
+            self.customer_data_list.append(CustomerData(**customer_data_dict))
+
+        print(self.customer_data_list)
