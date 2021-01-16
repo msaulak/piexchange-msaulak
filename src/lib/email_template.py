@@ -13,7 +13,6 @@ class EmailTemplate:
         self.mime_type: Optional[str] = None
         self.body: Optional[str] = None
 
-    @log_and_call
     def load_template_from_file(self, email_template_path: str):
         with open(email_template_path) as fp_email_template:
             email_template: Dict[str, str] = json.load(fp_email_template)

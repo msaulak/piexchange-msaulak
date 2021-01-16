@@ -1,10 +1,14 @@
 import logging
 import os
+from datetime import datetime
 from pathlib import Path
 
 from src.customer_data_extractors.csv_customer_data_extractor import CsvCustomerDataExtractor
 from src.lib.base_customer_data_extractor import BaseCustomerDataExtractor
+from src.lib.customer_data import CustomerData
 from src.lib.email_template import EmailTemplate
+from src.lib.outgoing_email import OutgoingEmail
+from src.utils.constants import TEMPLATE_FILLERS
 from src.utils.custom_exceptions import InvalidCustomerDataExtractor
 
 logger = logging.getLogger('pi.exchange.emailsender')
@@ -39,12 +43,37 @@ class OutgoingEmailManager:
         self.customer_data_extractor: BaseCustomerDataExtractor = customer_data_extractor_class(customer_data_path,
                                                                                                 errors_file_location)
 
+        self.outgoing_emails = []
+
+        self.today = datetime.now().strftime('%Y-%m-%d')
+
     def _load_data(self):
         self.email_template.load_template_from_file(self.email_template_path)
         self.customer_data_extractor.load_dataset()
 
+    def _get_replaced_field(self, template_field, customer_data: CustomerData):
+        template_field_data = getattr(self.email_template, template_field)
+        template_field_data = template_field_data.replace(TEMPLATE_FILLERS.first_name, customer_data.first_name)
+        template_field_data = template_field_data.replace(TEMPLATE_FILLERS.last_name, customer_data.last_name)
+        template_field_data = template_field_data.replace(TEMPLATE_FILLERS.title, customer_data.title)
+        template_field_data = template_field_data.replace(TEMPLATE_FILLERS.today, self.today)
+
+        return template_field_data
+
     def _merge_template_with_customer_data(self):
-        pass
+        for customer_data in self.customer_data_extractor.customer_data_list:
+            print(customer_data)
+
+            outgoing_email_dict = {
+                'from': self.email_template.sender,
+                'to': customer_data.email,
+                'subject' : self._get_replaced_field('subject', customer_data),
+                'mime_type': self.email_template.mime_type,
+                'body': self._get_replaced_field('body', customer_data),
+            }
+            outgoing_email = OutgoingEmail(**outgoing_email_dict)
+
+            print(outgoing_email)
 
     def _export_emails_to_folder(self):
         pass

@@ -17,7 +17,11 @@ class BaseCustomerDataExtractor:
         self.customer_data: Optional[pd.DataFrame] = None
         self.erroneous_data: Optional[pd.DataFrame] = None
 
-        self.customer_data_list: List[CustomerData] = []
+        self._customer_data_list: List[CustomerData] = []
+
+    @property
+    def customer_data_list(self):
+        return self._customer_data_list
 
     def _load_customer_data(self):
         raise NotImplementedError('load_customer_data not implemented')
@@ -44,6 +48,4 @@ class BaseCustomerDataExtractor:
         logger.info(f'Cleaned customer data\n{self.customer_data}')
 
         for customer_data_dict in self.customer_data.to_dict(orient='records'):
-            self.customer_data_list.append(CustomerData(**customer_data_dict))
-
-        print(self.customer_data_list)
+            self._customer_data_list.append(CustomerData(**customer_data_dict))
