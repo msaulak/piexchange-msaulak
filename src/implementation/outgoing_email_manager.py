@@ -1,7 +1,9 @@
+import json
 import logging
 import os
 from datetime import datetime
 from pathlib import Path
+from typing import List
 
 from src.customer_data_extractors.csv_customer_data_extractor import CsvCustomerDataExtractor
 from src.lib.base_customer_data_extractor import BaseCustomerDataExtractor
@@ -30,7 +32,8 @@ def customer_data_extractor_factory(customer_data_path: str):
 
 class OutgoingEmailManager:
     def __init__(self, email_template_path: str, customer_data_path: str,
-                 output_emails_directory: str, errors_file_location: str):
+                 output_emails_directory: str, errors_file_location: str,
+                 ):
 
         self.customer_data_path = customer_data_path
 
@@ -43,9 +46,9 @@ class OutgoingEmailManager:
         self.customer_data_extractor: BaseCustomerDataExtractor = customer_data_extractor_class(customer_data_path,
                                                                                                 errors_file_location)
 
-        self.outgoing_emails = []
+        self.outgoing_emails: List[OutgoingEmail] = []
 
-        self.today = datetime.now().strftime('%Y-%m-%d')
+        self.today = datetime.now().strftime('%d %b %Y')
 
     def _load_data(self):
         self.email_template.load_template_from_file(self.email_template_path)
@@ -73,10 +76,19 @@ class OutgoingEmailManager:
             }
             outgoing_email = OutgoingEmail(**outgoing_email_dict)
 
-            print(outgoing_email)
+            self.outgoing_emails.append(outgoing_email)
+
 
     def _export_emails_to_folder(self):
-        pass
+        # Create folder with current datetime
+        output_dir_for_run = os.path.join(self.output_emails_directory, datetime.now().strftime('%Y-%m-%d-%H-%M-%S'))
+        os.makedirs(output_dir_for_run)
+
+        for outgoing_email in self.outgoing_emails:
+            file_name = f'output_email_{outgoing_email.to}.json'
+            with open(os.path.join(output_dir_for_run, file_name), 'w') as fp:
+                fp.write('\n')
+                json.dump(outgoing_email.to_dict(), fp, indent=4)
 
     def _final_send(self):
         pass

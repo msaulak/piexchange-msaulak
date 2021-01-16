@@ -14,3 +14,12 @@ class OutgoingEmail:
 
     def __str__(self):
         return object_to_str(self)
+
+    def to_dict(self):
+        return {
+            'from': self.sender,
+            'to': self.to,
+            'subject': self.subject,
+            'mimeType': self.mime_type,
+            'body': self.body
+        }
