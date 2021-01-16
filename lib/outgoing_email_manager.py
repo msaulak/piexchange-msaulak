@@ -1,21 +1,18 @@
+import json
+
 from lib.base_customer_data_extractor import BaseCustomerDataExtractor
+from lib.email_template import EmailTemplate
 
 
 class OutgoingEmailManager:
-    def __init__(self, email_template: str, customer_data_extractor: BaseCustomerDataExtractor,
-                 output_email_location: str, errors_file_location: str = None):
+    def __init__(self, email_template_path: str, customer_data_path: BaseCustomerDataExtractor,
+                 output_emails_directory: str, errors_file_location: str):
 
-        self.email_template = email_template
-        self.customer_data_extractor = customer_data_extractor
+        self.customer_data_path = customer_data_path
 
-        self.output_email_location = output_email_location
-        self.errors_file_location = errors_file_location if errors_file_location is not None else output_email_location
+        self.output_emails_directory = output_emails_directory
+        self.errors_file_location = errors_file_location
 
-        self.sender = None
-        self.mime_type = None
+        self.email_template: EmailTemplate = EmailTemplate(email_template_path)
 
-        self.init_email_template()
-
-    def init_email_template(self):
-        pass
-
+        print(self.email_template)
