@@ -7,13 +7,11 @@ from src.utils.helper_methods import log_and_call
 logger = logging.getLogger('pi.exchange.emailsender')
 
 class EmailTemplate:
-    def __init__(self, email_template_path: str):
+    def __init__(self):
         self.sender: Optional[str] = None
         self.subject: Optional[str] = None
         self.mime_type: Optional[str] = None
         self.body: Optional[str] = None
-
-        self.load_template_from_file(email_template_path)
 
     @log_and_call
     def load_template_from_file(self, email_template_path: str):
@@ -24,6 +22,8 @@ class EmailTemplate:
             self.subject = email_template['subject']
             self.mime_type = email_template['mimeType']
             self.body = email_template['body']
+
+            logger.info(f'EmailTemplate: {str(self)}')
 
     def __str__(self):
         ret_str_list = []
