@@ -1,0 +1,2 @@
+class InvalidCustomerDataExtractor(Exception):
+    pass

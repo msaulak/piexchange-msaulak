@@ -2,7 +2,7 @@
 
 import argparse
 
-from src.lib.outgoing_email_manager import OutgoingEmailManager
+from src.implementation.outgoing_email_manager import OutgoingEmailManager
 
 
 def parse_args():
