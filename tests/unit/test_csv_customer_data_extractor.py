@@ -23,4 +23,3 @@ class TestCsvCustomerDataExtractor(TestCase):
                                                          2: 0, 3: 'BBB', 4: 0})])
 
         self.assertEqual(expected_customer_data, actual_customer_data)
-        

@@ -31,8 +31,7 @@ def customer_data_extractor_factory(customer_data_path: str):
 
 class OutgoingEmailManager:
     def __init__(self, email_template_path: str, customer_data_path: str,
-                 output_emails_directory: str, errors_file_location: str,
-                 ):
+                 output_emails_directory: str, errors_file_location: str):
 
         self.customer_data_path = customer_data_path
 
@@ -64,15 +63,10 @@ class OutgoingEmailManager:
 
     def _merge_template_with_customer_data(self):
         for customer_data in self.customer_data_extractor.customer_data_list:
-
-            outgoing_email_dict = {
-                'sender': self.email_template.sender,
-                'to': customer_data.email,
-                'subject' : self._get_replaced_field('subject', customer_data),
-                'mime_type': self.email_template.mime_type,
-                'body': self._get_replaced_field('body', customer_data),
-            }
-            outgoing_email = OutgoingEmail(**outgoing_email_dict)
+            outgoing_email = OutgoingEmail(sender=self.email_template.sender, to=customer_data.email,
+                                           subject=self._get_replaced_field('subject', customer_data),
+                                           mime_type=self.email_template.mime_type,
+                                           body=self._get_replaced_field('body', customer_data))
 
             self.outgoing_emails.append(outgoing_email)
 
@@ -80,7 +74,7 @@ class OutgoingEmailManager:
     def _export_emails_to_folder(self):
         # Create folder with current datetime
         output_dir_for_run = os.path.join(self.output_emails_directory, datetime.now().strftime('%Y-%m-%d-%H-%M-%S'))
-        os.makedirs(output_dir_for_run)
+        os.makedirs(output_dir_for_run, exist_ok=True)
 
         for outgoing_email in self.outgoing_emails:
             file_name = f'output_email_{outgoing_email.to}.json'
