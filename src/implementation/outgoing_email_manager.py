@@ -10,13 +10,15 @@ from src.lib.base_customer_data_extractor import BaseCustomerDataExtractor
 from src.lib.customer_data import CustomerData
 from src.lib.email_template import EmailTemplate
 from src.lib.outgoing_email import OutgoingEmail
+from src.lib.outgoing_email_api import OutgoingEmailApi
 from src.utils.custom_exceptions import InvalidCustomerDataExtractor
 
 logger = logging.getLogger('pi.exchange.emailsender')
 
 CUSTOMER_DATA_EXTRACTOR_FACTORY = {
-    '.csv' : CsvCustomerDataExtractor
+    '.csv': CsvCustomerDataExtractor
 }
+
 
 def customer_data_extractor_factory(customer_data_path: str):
     file_extension = ''.join(Path(customer_data_path).suffixes)
@@ -31,7 +33,8 @@ def customer_data_extractor_factory(customer_data_path: str):
 
 class OutgoingEmailManager:
     def __init__(self, email_template_path: str, customer_data_path: str,
-                 output_emails_directory: str, errors_file_location: str):
+                 output_emails_directory: str, errors_file_location: str,
+                 email_sending_api: OutgoingEmailApi = None):
 
         self.customer_data_path = customer_data_path
 
@@ -39,6 +42,8 @@ class OutgoingEmailManager:
         self.errors_file_location = errors_file_location
         self.email_template_path: str = email_template_path
         self.email_template: EmailTemplate = EmailTemplate()
+
+        self.email_sending_api = email_sending_api
 
         customer_data_extractor_class = customer_data_extractor_factory(customer_data_path)
         self.customer_data_extractor: BaseCustomerDataExtractor = customer_data_extractor_class(customer_data_path,
@@ -69,7 +74,6 @@ class OutgoingEmailManager:
                                            body=self._get_replaced_field('body', customer_data))
 
             self.outgoing_emails.append(outgoing_email)
-
 
     def _export_emails_to_folder(self):
         # Create folder with current datetime

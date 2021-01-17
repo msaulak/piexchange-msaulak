@@ -15,7 +15,6 @@ class CsvCustomerDataExtractor(BaseCustomerDataExtractor):
 
     def _load_customer_data(self):
         customer_data: pd.DataFrame = pd.read_csv(self.data_file_path)
-        customer_data.to_pickle('customer_data.pkl')
         logger.info(f'Raw dat\n{customer_data}')
 
         return customer_data
