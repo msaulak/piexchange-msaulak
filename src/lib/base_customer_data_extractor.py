@@ -46,6 +46,5 @@ class BaseCustomerDataExtractor:
         logger.info(f'Customer dataframe\n{self.customer_data}')
         self._clean_dataset()
         logger.info(f'Cleaned customer data\n{self.customer_data}')
-
         for customer_data_dict in self.customer_data.to_dict(orient='records'):
             self._customer_data_list.append(CustomerData(**customer_data_dict))

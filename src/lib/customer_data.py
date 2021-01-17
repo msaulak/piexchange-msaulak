@@ -11,4 +11,7 @@ class CustomerData:
         self.full_name = ' '.join([self.first_name, self.last_name])
 
     def __repr__(self):
+        return str(self)
+
+    def __str__(self):
         return object_to_str(self)

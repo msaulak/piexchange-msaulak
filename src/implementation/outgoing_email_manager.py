@@ -10,7 +10,6 @@ from src.lib.base_customer_data_extractor import BaseCustomerDataExtractor
 from src.lib.customer_data import CustomerData
 from src.lib.email_template import EmailTemplate
 from src.lib.outgoing_email import OutgoingEmail
-from src.utils.constants import TEMPLATE_FILLERS
 from src.utils.custom_exceptions import InvalidCustomerDataExtractor
 
 logger = logging.getLogger('pi.exchange.emailsender')
@@ -56,19 +55,18 @@ class OutgoingEmailManager:
 
     def _get_replaced_field(self, template_field, customer_data: CustomerData):
         template_field_data = getattr(self.email_template, template_field)
-        template_field_data = template_field_data.replace(TEMPLATE_FILLERS.first_name, customer_data.first_name)
-        template_field_data = template_field_data.replace(TEMPLATE_FILLERS.last_name, customer_data.last_name)
-        template_field_data = template_field_data.replace(TEMPLATE_FILLERS.title, customer_data.title)
-        template_field_data = template_field_data.replace(TEMPLATE_FILLERS.today, self.today)
+        template_field_data = template_field_data.replace(EmailTemplate.filler_first_name, customer_data.first_name)
+        template_field_data = template_field_data.replace(EmailTemplate.filler_last_name, customer_data.last_name)
+        template_field_data = template_field_data.replace(EmailTemplate.filler_title, customer_data.title)
+        template_field_data = template_field_data.replace(EmailTemplate.filler_today, self.today)
 
         return template_field_data
 
     def _merge_template_with_customer_data(self):
         for customer_data in self.customer_data_extractor.customer_data_list:
-            print(customer_data)
 
             outgoing_email_dict = {
-                'from': self.email_template.sender,
+                'sender': self.email_template.sender,
                 'to': customer_data.email,
                 'subject' : self._get_replaced_field('subject', customer_data),
                 'mime_type': self.email_template.mime_type,
@@ -88,7 +86,7 @@ class OutgoingEmailManager:
             file_name = f'output_email_{outgoing_email.to}.json'
             with open(os.path.join(output_dir_for_run, file_name), 'w') as fp:
                 fp.write('\n')
-                json.dump(outgoing_email.to_dict(), fp, indent=4)
+                json.dump(outgoing_email.to_serializable_json(), fp, indent=4)
 
     def _final_send(self):
         pass
