@@ -19,8 +19,6 @@ class TestBaseCustomerDataExtractor(TestCase):
         self.base_customer_extractor = BaseCustomerDataExtractor(data_file_path=self.test_data_file_path,
                                                                  errors_file_path=self.errors_file_path)
 
-        # self.base_customer_extractor._load_customer_data = Mock(return_value=pd.read_pickle(pickled_customer_file))
-
     def tearDown(self) -> None:
         if os.path.exists(self.errors_file_path):
             os.remove(self.errors_file_path)

@@ -1,3 +1,4 @@
+"""Module representing an Email template. Data is """
 import json
 import logging
 from typing import Dict, Optional

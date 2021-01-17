@@ -1,4 +1,5 @@
 import logging
+import pickle
 from typing import Optional
 
 import pandas as pd
@@ -16,5 +17,4 @@ class CsvCustomerDataExtractor(BaseCustomerDataExtractor):
     def _load_customer_data(self):
         customer_data: pd.DataFrame = pd.read_csv(self.data_file_path)
         logger.info(f'Raw dat\n{customer_data}')
-
         return customer_data

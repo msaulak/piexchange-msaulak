@@ -33,7 +33,7 @@ class TestHelperMethods(TestCase):
     def test_get_parent_dir(self):
         test_path = os.path.join('pi', 'exchange', 'test', 'path')
         actual = get_parent_dir(test_path, levels_up=2)
-        expected = 'pi\exchange'
+        expected = os.path.join('pi','exchange')
         self.assertEqual(expected, actual)
 
     def test_get_parent_recurion_limit(self):

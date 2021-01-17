@@ -87,7 +87,9 @@ class OutgoingEmailManager:
                 json.dump(outgoing_email.to_serializable_json(), fp, indent=4)
 
     def _final_send(self):
-        pass
+        if self.email_sending_api is not None:
+            for outgoing_email in self.outgoing_emails:
+                self.email_sending_api.send_message(outgoing_email)
 
     def send_emails(self):
         self._load_data()
