@@ -13,13 +13,17 @@ def parse_args():
     parser.add_argument('output_directory', help='Path where outgoing email JSON should be saved')
     parser.add_argument('errors_file_path', help='Path to where erroneous records should be saved.')
 
-    sending_api_subparser = parser.add_subparsers(dest='send', title='Send emails',
-                                                  description='Optional. Instruct on which api to use to send emails.',
-                                                  help='Optional. Instruct on which api to use to send emails.',
-                                                  )
 
-    sending_api_subparser.add_parser('--smtp', help='Send email via SMTP')
-    sending_api_subparser.add_parser('--rest', help='Send email via REST API')
+    sending_api_parser = parser.add_subparsers(dest='send', title='Send emails',
+                                                  description='Optional. Instruct on which api to use to send emails.',
+                                                  help='Optional. Instruct on which api to use to send emails.')
+
+
+    sending_api_subparser = sending_api_parser.add_parser('send', help='Send email via an API')
+    sending_api_group = sending_api_subparser.add_mutually_exclusive_group(required=True)
+
+    sending_api_group.add_argument('--smtp', action='store_true')
+    sending_api_group.add_argument('--rest', action='store_true')
 
     return parser.parse_args()
 
