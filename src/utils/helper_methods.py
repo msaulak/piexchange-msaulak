@@ -17,12 +17,19 @@ def log_and_call(func):
 
         logger.info(' | '.join(log_list))
 
-        return func(args, kwargs)
+        return func(*args, **kwargs)
 
     return inner_func
 
 
-def object_to_str(o):
+def object_to_str(o: object) -> str:
+    """Convert an object to a printable string
+    Args:
+        o: object
+
+    Returns:
+        str: string representation of the object
+    """
     ret_str_list = []
     for k, v in vars(o).items():
         if not k.startswith('_') and k != 'method_calls':
@@ -31,7 +38,16 @@ def object_to_str(o):
     return ' | '.join(ret_str_list)
 
 
-def get_parent_dir(starting_location, levels_up=1):
+def get_parent_dir(starting_location: str, levels_up: int = 1) -> str:
+    """Returns path of parent directory from the starting location. Default return value
+    is the immediate parent. User can pass in how many levels up they want to ho.
+    Args:
+        starting_location (str): Path from where to start
+        levels_up (int): how many levels to go up.
+
+    Returns:
+        str: path to the parent.
+    """
     if levels_up == 0:
         return starting_location
 

@@ -10,7 +10,7 @@ from src.utils.helper_methods import get_parent_dir
 class TestCsvCustomerDataExtractor(TestCase):
 
     @patch('src.lib.base_customer_data_extractor.BaseCustomerDataExtractor')
-    def test__load_customer_data(self, super_mock):
+    def test__load_customer_data(self, _):
         self.csv_customer_data_extractor = CsvCustomerDataExtractor('', '')
         self.csv_customer_data_extractor.data_file_path = os.path.join(get_parent_dir(__file__, 2), 'data',
                                                                        'customers.csv')

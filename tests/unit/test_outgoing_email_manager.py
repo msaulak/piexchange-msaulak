@@ -2,13 +2,14 @@ import os
 import shutil
 from datetime import datetime
 from unittest import TestCase, skip
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock
 
 from freezegun import freeze_time
 
 from src.implementation.outgoing_email_manager import OutgoingEmailManager
 from src.lib.customer_data import CustomerData
 from src.utils.helper_methods import get_parent_dir
+
 
 @freeze_time(datetime(2021, 1, 14, 1, 1, 1, 1))
 class TestOutgoingEmailManager(TestCase):
@@ -55,14 +56,13 @@ class TestOutgoingEmailManager(TestCase):
         self.outgoing_email_manager._merge_template_with_customer_data()
         self.assertEqual(len(self.outgoing_email_manager.outgoing_emails), 2)
 
-
     def test__export_emails_to_folder(self):
         self.outgoing_email_manager._load_data()
         self.outgoing_email_manager._merge_template_with_customer_data()
         self.outgoing_email_manager._export_emails_to_folder()
 
         john_smith_file = os.path.join(get_parent_dir(__file__, 2), 'data', 'output', '2021-01-14-01-01-01',
-                                         'output_email_john.smith@example.com.json')
+                                       'output_email_john.smith@example.com.json')
         with open(john_smith_file) as fp:
             actual = fp.read()
             expected = '''
